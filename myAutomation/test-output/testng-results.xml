@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" ignored="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="37092" started-at="2017-07-28T14:16:30Z" finished-at="2017-07-28T14:17:07Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="37092" started-at="2017-07-28T14:16:30Z" finished-at="2017-07-28T14:17:07Z">
+      <class name="TestCases.ecommerce">
+        <test-method status="PASS" signature="beforeClass()[pri:0, instance:TestCases.ecommerce@7d9d1a19]" name="beforeClass" is-config="true" duration-ms="30" started-at="2017-07-28T19:46:30Z" finished-at="2017-07-28T19:46:30Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeClass -->
+        <test-method status="PASS" signature="ecommerceCase()[pri:0, instance:TestCases.ecommerce@7d9d1a19]" name="ecommerceCase" duration-ms="36996" started-at="2017-07-28T19:46:30Z" finished-at="2017-07-28T19:47:07Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- ecommerceCase -->
+      </class> <!-- TestCases.ecommerce -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
