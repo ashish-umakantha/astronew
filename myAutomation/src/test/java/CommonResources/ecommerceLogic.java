@@ -167,7 +167,7 @@ public class ecommerceLogic
 		ArrayList<String> finallist = new ArrayList<String>();
 		finallist.addAll(getFlipkartPrices(driver));
 		finallist.addAll(getShopcluesPrices(driver));
-		finallist.addAll(paytm());
+		finallist.addAll(getPaytmPrices());
 		Collections.sort(finallist);
 		for (int i=0; i<=finallist.size()-1;i++)
 		{
@@ -176,7 +176,7 @@ public class ecommerceLogic
 	}
 	
 	//Method to get prices of iPhone 7 from Paytm using rest assured.
-	public ArrayList<String> paytm() throws Exception
+	public ArrayList<String> getPaytmPrices() throws Exception
 	{
 		data = new ReadPropertyFile();
 	    String requestUrl = data.getPaytmApi();
