@@ -56,7 +56,7 @@ public class ReadPropertyFile {
 	
 	public String getPaytmApi()
 	{
-		return property_obj.getProperty("paytapi");
+		return property_obj.getProperty("paytmapi");
 	}
 	
 }
