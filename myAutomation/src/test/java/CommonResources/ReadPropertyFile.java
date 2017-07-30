@@ -53,4 +53,10 @@ public class ReadPropertyFile {
 	{
 		return property_obj.getProperty("text");
 	}
+	
+	public String getPaytmApi()
+	{
+		return property_obj.getProperty("paytapi");
+	}
+	
 }
