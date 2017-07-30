@@ -25,5 +25,5 @@ public class flipkart {
 	
 	@FindBy(xpath=".//button[@class='_2AkmmA _29YdH8']")
 	public WebElement login_pop_up_close;
-
+		
 }
