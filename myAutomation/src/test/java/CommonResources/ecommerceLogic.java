@@ -1,8 +1,11 @@
 package CommonResources;
 
+import static io.restassured.RestAssured.given;
 import static org.testng.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Collections;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,6 +14,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import Locators.flipkart;
 import Locators.shopclues;
+import io.restassured.response.Response;
 
 public class ecommerceLogic 
 {
@@ -24,6 +28,7 @@ public class ecommerceLogic
 	WebDriverWait wait;
 	public ArrayList<String> flipkart_output;
 	public ArrayList<String> shopclues_output;
+	ArrayList<String> paytm_output;
 	
 	//Method to initialize variables
 	public void initializeVariables(WebDriver driver) throws Exception{
@@ -37,7 +42,7 @@ public class ecommerceLogic
 			shopclues_output = new ArrayList<String>();
 	}
 	
-	//Method to get Prices of iPhone 7 from Flipkart site
+	//Method to get prices of iPhone 7 from Flipkart.
 	public ArrayList<String> getFlipkartPrices(WebDriver driver) throws Exception
 	{	
 		driver=new ChromeDriver();
@@ -84,7 +89,7 @@ public class ecommerceLogic
 			String actualprice = "Rs." + build.toString();			
 			build.setLength(0);			
 			String url = link.get(i).getAttribute("href");
-			if(!phone_name.contains("Plus") && phone_name.contains("Apple iPhone 7"))
+			if(phone_name.toLowerCase().contains("iphone 7") && !phone_name.toLowerCase().contains("iphone 7 plus"))
 			{
 				build.append(actualprice + " ");
 				build.append(phone_name + "  ");
@@ -96,10 +101,11 @@ public class ecommerceLogic
 			build.setLength(0);
 		}
 		driver.close();
+		System.out.println("Total number of Flipkart phones are: " + flipkart_output.size());
 		return flipkart_output;
 	}
 	
-	//Method to get Prices of iPhone 7 from Shopclues site
+	//Method to get prices of iPhone 7 from Shopclues.
 	public ArrayList<String> getShopcluesPrices(WebDriver driver) throws Exception
 	{
 		
@@ -127,7 +133,7 @@ public class ecommerceLogic
 			WebElement e2 = phoneprice.get(i);
 			String price = e2.getText();
 			String url = link.get(i).getAttribute("href");
-			if(!phone_name.contains("PLUS") && phone_name.contains("Apple iPhone 7"))
+			if(phone_name.toLowerCase().contains("iphone 7") && !phone_name.toLowerCase().contains("iphone 7 plus"))
 			{	
 				build.append(price + " ");
 				build.append(phone_name + "  ");
@@ -139,10 +145,11 @@ public class ecommerceLogic
 			build.setLength(0);
 		}
 		driver.close();
+		System.out.println("Total number of Shopclues phones are: " + shopclues_output.size());
 		return shopclues_output;
 	}
 	
-	//Method to dismiss  flipkart pop up. 
+	//Method to dismiss Flipkart pop up. 
 	public void dismissFlipkartPopUp(WebDriver driver){
 		try{
 			locators = new flipkart(driver);
@@ -160,10 +167,46 @@ public class ecommerceLogic
 		ArrayList<String> finallist = new ArrayList<String>();
 		finallist.addAll(getFlipkartPrices(driver));
 		finallist.addAll(getShopcluesPrices(driver));
+		finallist.addAll(paytm());
 		Collections.sort(finallist);
 		for (int i=0; i<=finallist.size()-1;i++)
 		{
 			System.out.println(finallist.get(i));
 		}
+	}
+	
+	//Method to get prices of iPhone 7 from Paytm using rest assured.
+	public ArrayList<String> paytm() throws Exception
+	{
+		data = new ReadPropertyFile();
+	    String requestUrl = data.getPaytmApi();
+		Response  rep = getCall(requestUrl);
+	    paytm_output  = new ArrayList<String>();
+		JSONObject data = new JSONObject(rep.body().asString());
+		JSONArray allPhones = data.getJSONArray("grid_layout");
+		
+		for(int i=0;i<allPhones.length();i++){
+			 String name = allPhones.getJSONObject(i).getString("name");
+			 String url;
+			 String price;
+			 if(name.toLowerCase().contains("iphone 7") && !name.toLowerCase().contains("iphone 7 plus")){
+				 url = allPhones.getJSONObject(i).getString("url");
+				 //Making get call using url in order to get url and offer_price
+				 rep = getCall(url);
+				 JSONObject phoneData = new JSONObject(rep.body().asString());
+				 url = phoneData.getString("shareurl");
+				 price = String.valueOf(phoneData.get("offer_price"));
+				 paytm_output.add("Rs."+price+" "+name+"  "+"Website is Paytm "+"Link: "+url);
+			 }
+			 
+		}
+		System.out.println("Total number of Paytm phones are: " + paytm_output.size());
+		return paytm_output;
+	}
+	
+	//Method to make a get call
+	public Response getCall(String request){
+		Response rep = given().get(request);
+		return rep;
 	}
 }
