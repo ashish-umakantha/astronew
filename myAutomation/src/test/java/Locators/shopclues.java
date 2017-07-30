@@ -25,6 +25,5 @@ public class shopclues {
 	
 	@FindBy(xpath=".//*[@id='search']/input[2]")
 	public WebElement shopclues_search_btn;
-
-
+	
 }
